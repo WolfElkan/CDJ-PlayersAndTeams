@@ -1,0 +1,22 @@
+<select ng-model="Joinery.new.player_id">
+	<option ng-repeat="player in Player.all()" value="{{player.id}}" ng-bind="player.name">
+</select>
+<select ng-model="Joinery.new.team_id">
+	<option ng-repeat="team in Team.all()" value="{{team.id}}" ng-bind="team.name">
+</select>
+<button ng-click="Joinery.add()">Assign Player to Team</button>
+<span class="error" ng-bind="player_team_error_message"></span>
+
+<table class="dojo-table">
+	<thead>
+		<th>Name</th>
+		<th>Team</th>
+		<th class="fix"></th>
+	</thead>
+	<tr ng-repeat="join in Joinery.all() track by $index">
+		<td>{{join.player().name}}</td>
+		<td>{{join.team().name}}</td> 
+		<td class="fix"><button ng-click="Joinery.delete($index)">Clear Assignment</button></td>
+	</tr>
+	<button ng-click="Joinery.test()">Test</button>
+</table>

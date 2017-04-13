@@ -1,0 +1,34 @@
+.dojo-table {
+	border: solid black 3px;
+	border-spacing: 0px;
+}
+
+.dojo-table tr:nth-child(odd) {
+	background-color: #eee
+}
+
+.dojo-table tr:nth-child(even) {
+	background-color: #fff
+}
+
+.dojo-table thead th {
+	background-color: #ccc
+}
+
+.dojo-table thead th, .dojo-table tr td {
+	border-left: solid black 2px;
+}
+
+.dojo-table thead th:first-child, .dojo-table tr td:first-child {
+	border-left: none;
+}
+
+.dojo-table td {
+	padding: 5px;
+}
+
+.check_dojo-table {
+	color: green;
+}
+
+/*<span class="check_dojo-table">Copy this text into your HTML. If it turns green, stylesheet is connected</span>*/

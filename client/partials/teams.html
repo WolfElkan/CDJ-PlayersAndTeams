@@ -1,0 +1,13 @@
+Name:
+<input type="text" ng-model="Team.new.name">
+<button ng-click="Team.add()">Add New Team</button>
+<table class="dojo-table">
+	<thead>
+		<th>Team Name^</th>
+		<th>Actions</th>
+	</thead>
+	<tr ng-repeat="team in Team.all() track by $index">
+		<td ng-bind="team.name"/>
+		<td><button ng-click="Team.delete($index)">Remove Team</button></td>
+	</tr>
+</table>
