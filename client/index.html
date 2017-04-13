@@ -8,12 +8,17 @@
 				width: 120px;
 			}
 
+			* {
+				font-size: 20px
+			}
+
 		</style>
 		<script type="text/javascript" src="angular/angular.js"></script>
 		<script type="text/javascript" src="angular-route/angular-route.js"></script>
 		<script type="text/javascript">
 			
 		var app = angular.module('app', ['ngRoute'])
+
 		app.config(function($routeProvider) {
 			$routeProvider.when('/players',{
 				templateUrl: 'partials/players.html',
@@ -22,6 +27,10 @@
 			$routeProvider.when('/teams',{
 				templateUrl: 'partials/teams.html',
 				controller:  'teams_cxr'
+			})
+			$routeProvider.when('/teams/:id',{
+				templateUrl: 'partials/teams_show.html',
+				controller:  'teams_cxr',
 			})
 			$routeProvider.when('/player~team',{
 				templateUrl: 'partials/player~team.html',
@@ -32,11 +41,19 @@
 			})
 		})
 
+		function equip(arr, callback) {
+			var result = []
+			for (var i = 0; i < arr.length; i++) {
+				result.push(callback(arr[i]))
+			}
+			return result
+		}
+
 		var PlayerFactory = app.factory('PlayerFactory',[function() {
 			var factory = {}
-			var stuff = []
+			var stuff = [{'name':'one','id':1},{'name':'two','id':2},{'name':'three','id':3},]
 			factory.new = {}
-			var next_id = 1
+			var next_id = 4
 
 			factory.all = function() {
 				return stuff
@@ -67,14 +84,17 @@
 		}])
 
 		var players_cxr = app.controller('players_cxr',['$scope','PlayerFactory',function($scope,PlayerFactory) {
+			function equip_player(player) {
+				return player
+			}
 			$scope.Player = PlayerFactory
 		}])
 
 		var TeamFactory = app.factory('TeamFactory',[function() {
 			var factory = {}
-			var stuff = []
+			var stuff = [{'name':'ONE','id':1},{'name':'TWO','id':2},{'name':'THREE','id':3},]
 			factory.new = {}
-			var next_id = 1
+			var next_id = 4
 
 			factory.all = function() {
 				return stuff
@@ -104,8 +124,22 @@
 			return factory
 		}])
 
-		var teams_cxr = app.controller('teams_cxr',['$scope','TeamFactory',function($scope,TeamFactory) {
+		var teams_cxr = app.controller('teams_cxr',['$scope','TeamFactory','$routeParams',function($scope,TeamFactory,$routeParams) {
+			function equip_team(team) {
+				team.players = function() {
+					var joins = PlayerTeamJoinery.all()
+					var result = []
+					for (var i = 0; i < joins.length; i++) {
+						if (joins[i].team_id == this.id) {
+							result.push(joins[i].player())
+						}
+					}
+				}
+				return team
+			}
 			$scope.Team = TeamFactory
+			var id = $routeParams.id
+			$scope.team = TeamFactory.find(id)
 		}])
 
 		var PlayerTeamJoinery = app.factory('PlayerTeamJoinery',['PlayerFactory','TeamFactory',function(PlayerFactory,TeamFactory) {
@@ -128,12 +162,6 @@
 
 			factory.add = function() {
 				factory.new.id = next_id++
-				factory.new.player = function() {
-					return PlayerFactory.find(this.player_id)
-				}
-				factory.new.team = function() {
-					return TeamFactory.find(this.team_id)
-				}
 				stuff.push(factory.new)
 				factory.new = {}
 			}
@@ -149,9 +177,24 @@
 		}])
 
 		var player_team_m2m_cxr = app.controller('player_team_m2m_cxr',['$scope','PlayerTeamJoinery','PlayerFactory','TeamFactory',function($scope,PlayerTeamJoinery,PlayerFactory,TeamFactory) {
+			function equip_player_team(player_team) {
+				player_team.player = function() {
+					return PlayerFactory.find(this.player_id)
+				}
+				player_team.team = function() {
+					return TeamFactory.find(this.team_id)
+				}
+				return player_team
+			}
 			$scope.Joinery = PlayerTeamJoinery
+			$scope.joins = equip(PlayerTeamJoinery.all(),equip_player_team)
 			$scope.Player = PlayerFactory
 			$scope.Team = TeamFactory
+			$scope.test = function() {
+				// console.log(PlayerFactory.all())
+				// console.log(TeamFactory.all())
+				console.log(PlayerTeamJoinery.all())
+			}
 		}])
 
 		</script>

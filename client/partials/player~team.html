@@ -13,10 +13,11 @@
 		<th>Team</th>
 		<th class="fix"></th>
 	</thead>
-	<tr ng-repeat="join in Joinery.all() track by $index">
+	<tr ng-repeat="join in joins track by $index">
 		<td>{{join.player().name}}</td>
 		<td>{{join.team().name}}</td> 
 		<td class="fix"><button ng-click="Joinery.delete($index)">Clear Assignment</button></td>
 	</tr>
-	<button ng-click="Joinery.test()">Test</button>
+	<button ng-click="test()">Test</button>
 </table>
+{{bar}}
