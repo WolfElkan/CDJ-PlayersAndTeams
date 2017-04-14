@@ -1,6 +1,13 @@
-Name:
-<input type="text" ng-model="Player.new.name">
-<button ng-click="Player.add()">Add Player</button>
+<style type="text/css">p{color: red;}</style>
+<form name="NewPlayer">
+	Name:
+	<input name="name" type="text" ng-model="Player.new.name" minlength="4" required>
+	<button ng-click="Player.add()">Add Player</button>
+</form>
+<div ng-messages="NewPlayer.name.$error">
+	<p ng-message="required">Please enter a name</p>
+	<p ng-message="minlength">Name must be at least 4 letters</p>
+</div>
 <table class="dojo-table">
     <thead>
         <th>Name^</th>

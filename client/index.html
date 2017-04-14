@@ -15,9 +15,11 @@
 		</style>
 		<script type="text/javascript" src="angular/angular.js"></script>
 		<script type="text/javascript" src="angular-route/angular-route.js"></script>
+		<script type="text/javascript" src="angular-messages/angular-messages.js"></script>
 		<script type="text/javascript">
 			
-		var app = angular.module('app', ['ngRoute'])
+		var app = angular.module('app', ['ngRoute','ngMessages'])
+		var SEED = true
 
 		app.config(function($routeProvider) {
 			$routeProvider.when('/players',{
@@ -51,9 +53,9 @@
 
 		var PlayerFactory = app.factory('PlayerFactory',[function() {
 			var factory = {}
-			var stuff = [{'name':'one','id':1},{'name':'two','id':2},{'name':'three','id':3}]
+			var stuff = SEED ? [{'name':'one','id':1},{'name':'two','id':2},{'name':'three','id':3}] : []
 			factory.new = {}
-			var next_id = 4
+			var next_id = SEED ? 4 : 1
 
 			factory.all = function() {
 				return stuff
@@ -92,9 +94,9 @@
 
 		var TeamFactory = app.factory('TeamFactory',[function() {
 			var factory = {}
-			var stuff = [{'name':'Red','id':1},{'name':'Blue','id':2}]
+			var stuff = SEED ? [{'name':'Red','id':1},{'name':'Blue','id':2}] : []
 			factory.new = {}
-			var next_id = 3
+			var next_id = SEED ? 3 : 1
 
 			factory.all = function() {
 				return stuff
@@ -148,13 +150,13 @@
 
 		var PlayerTeamJoinery = app.factory('PlayerTeamJoinery',['PlayerFactory','TeamFactory',function(PlayerFactory,TeamFactory) {
 			var factory = {}
-			var stuff = [
+			var stuff = SEED ? [
 				equip({'id':1,'player_id':1,'team_id':1}),
 				equip({'id':2,'player_id':2,'team_id':2}),
 				equip({'id':3,'player_id':3,'team_id':1})
-			]
+			] : []
 			factory.new = {}
-			var next_id = 4
+			var next_id = SEED ? 4 : 1
 
 			function equip(player_team) {
 				player_team.id = next_id++
