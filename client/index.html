@@ -41,7 +41,7 @@
 			})
 		})
 
-		function equip(arr, callback) {
+		function mass_equip(arr, callback) {
 			var result = []
 			for (var i = 0; i < arr.length; i++) {
 				result.push(callback(arr[i]))
@@ -51,9 +51,9 @@
 
 		var PlayerFactory = app.factory('PlayerFactory',[function() {
 			var factory = {}
-			var stuff = []
+			var stuff = [{'name':'one','id':1},{'name':'two','id':2},{'name':'three','id':3}]
 			factory.new = {}
-			var next_id = 1
+			var next_id = 4
 
 			factory.all = function() {
 				return stuff
@@ -84,7 +84,7 @@
 		}])
 
 		var players_cxr = app.controller('players_cxr',['$scope','PlayerFactory',function($scope,PlayerFactory) {
-			function equip_player(player) {
+			function equip(player) {
 				return player
 			}
 			$scope.Player = PlayerFactory
@@ -92,9 +92,9 @@
 
 		var TeamFactory = app.factory('TeamFactory',[function() {
 			var factory = {}
-			var stuff = []
+			var stuff = [{'name':'Red','id':1},{'name':'Blue','id':2}]
 			factory.new = {}
-			var next_id = 1
+			var next_id = 3
 
 			factory.all = function() {
 				return stuff
@@ -124,8 +124,7 @@
 			return factory
 		}])
 
-		var teams_cxr = app.controller('teams_cxr',['$scope','TeamFactory','$routeParams',function($scope,TeamFactory,$routeParams) {
-
+		var teams_cxr = app.controller('teams_cxr',['$scope','TeamFactory','PlayerTeamJoinery','$routeParams',function($scope,TeamFactory,PlayerTeamJoinery,$routeParams) {
 			function equip(team) {
 				team.players = function() {
 					var joins = PlayerTeamJoinery.all()
@@ -135,19 +134,27 @@
 							result.push(joins[i].player())
 						}
 					}
+					return result
 				}
 				return team
 			}
 			$scope.Team = TeamFactory
 			var id = $routeParams.id
-			$scope.team = TeamFactory.find(id)
+			var teams_show = TeamFactory.find(id)
+			if (teams_show) {
+				$scope.team = equip(teams_show)
+			}
 		}])
 
 		var PlayerTeamJoinery = app.factory('PlayerTeamJoinery',['PlayerFactory','TeamFactory',function(PlayerFactory,TeamFactory) {
 			var factory = {}
-			var stuff = []
+			var stuff = [
+				equip({'id':1,'player_id':1,'team_id':1}),
+				equip({'id':2,'player_id':2,'team_id':2}),
+				equip({'id':3,'player_id':3,'team_id':1})
+			]
 			factory.new = {}
-			var next_id = 1
+			var next_id = 4
 
 			function equip(player_team) {
 				player_team.id = next_id++
